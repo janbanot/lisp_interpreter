@@ -17,6 +17,11 @@ def tokenize(chars: str) -> list:
 
 
 def read_from_tokens(tokens: list) -> Exp:
+    """
+    Assembles nested list of prefix expressions from tokenized program intput string.
+    :param tokens: list of tokens
+    :return: nested list of expressions or a symbol
+    """
     if not tokens:
         raise SyntaxError('unexpected EOF')
     token = tokens.pop(0)
@@ -33,6 +38,11 @@ def read_from_tokens(tokens: list) -> Exp:
 
 
 def atom(token: str) -> Atom:
+    """
+    Distinguishes number tokens from symbol tokens by converting token to an integer or floating point number
+    :param token: single token
+    :return: token in correct type
+    """
     try:
         return int(token)
     except ValueError:
@@ -43,6 +53,11 @@ def atom(token: str) -> Atom:
 
 
 def parse(input_program: str) -> Exp:
+    """
+    Reads a scheme expression from an input program string
+    :param input_program: input program string
+    :return: nested list of expressions
+    """
     return read_from_tokens(tokenize(input_program))
 
 if __name__ == '__main__':
