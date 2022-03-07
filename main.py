@@ -1,4 +1,6 @@
-# Lisp type definitons
+import operator as op
+
+# Lisp of type definitons
 Symbol = str
 Number = (int, float)
 Atom = (Symbol, Number)
@@ -29,7 +31,7 @@ def read_from_tokens(tokens: list) -> Exp:
         form = []
         while tokens[0] != ')':
             form.append(read_from_tokens(tokens))
-        tokens.pop(0)  # pop off end )
+        tokens.pop(0)  # pop off ending )
         return form
     elif token == ')':
         raise SyntaxError('unexpected )')
@@ -60,6 +62,84 @@ def parse(input_program: str) -> Exp:
     """
     return read_from_tokens(tokenize(input_program))
 
+
+def standard_env() -> Env:
+    """
+    An environment maps includes neccessary lisp standard function to their python implementation
+    :return: dictionary with mapping from lisp primitives to python implementation
+    """
+    env = Env()
+    env.update({
+        '+': op.add,
+        '-': op.sub,
+        '*': op.mul,
+        '/': op.truediv,
+        'eq': op.eq,
+        'begin': lambda *x: x[-1],
+        'cons': lambda x, y: [x] + y,
+        'car': lambda x: x[0],
+        'cdr': lambda x: x[1:],
+        'atom': lambda x: isinstance(x, Atom)
+    })
+    return env
+
+global_env = standard_env()
+
+
+def lisp_eval(x: Exp, env=global_env) -> Exp:
+    """
+    Evaluation of lisp expressions consist of 5 scenarios:
+    - a symbol interpreted as a variable name
+    - a number that evaluates to itself
+    - a conditional if statement
+    - a new variable definition
+    - a procedure call
+    :param x: parsed expression
+    :param env: environment dictionary
+    :return: evaluation result
+    """
+    if isinstance(x, Symbol):
+        return env[x]
+    elif isinstance(x, Number):
+        return x
+    elif x[0] == 'if':
+        (_, test, conseq, alt) = x
+        exp = (conseq if lisp_eval(test, env) else alt)
+        return lisp_eval(exp, env)
+    elif x[0] == 'define':
+        (_, symbol, exp) = x
+        env[symbol] = lisp_eval(exp, env)
+    else:
+        proc = lisp_eval(x[0], env)
+        args = [lisp_eval(arg, env) for arg in x[1:]]
+        return proc(*args)
+
+
+def repl(prompt='>> '):
+    """
+    REPL - a read-eval-print loop
+    :param prompt: prompt strin
+    """
+    while True:
+        val = lisp_eval(parse(input(prompt)))
+        if val is not None:
+            print(scheme_str(val))
+
+
+def scheme_str(exp):
+    """
+    Converts a Python object back into scheme-readable string
+    :param exp: nested expression
+    :return: scheme-readable string
+    """
+    if isinstance(exp, List):
+        return '(' + ' '.join(map(schemestr, exp)) + ')'
+    else:
+        return str(exp)
+
+
 if __name__ == '__main__':
-    program = "(begin (define r 10) (* pi (* r r)))"
-    print(parse(program))
+    program = "(begin (define r 10) (* 3.14 (* r r)))"
+    program2 = "(if (> 10 20) 1 2)"
+    # print(lisp_eval(parse(program)))
+    repl()
