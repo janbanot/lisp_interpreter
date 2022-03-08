@@ -75,30 +75,30 @@ def standard_env() -> Env:
         '*': op.mul,
         '/': op.truediv,
         'eq': op.eq,
-        'begin': lambda *x: x[-1],
-        'cons': lambda x, y: [x] + y,
+        'cons': lambda x, y: [x, y],
         'car': lambda x: x[0],
-        'cdr': lambda x: x[1:],
+        'cdr': lambda x: x[1],
         'atom': lambda x: isinstance(x, Atom)
     })
     return env
 
+global_env = standard_env()
 
-def lisp_eval(x: Exp, env=None) -> Exp:
+
+def lisp_eval(x: Exp, env=global_env) -> Exp:
     """
-    Evaluation of lisp expressions consist of 5 scenarios:
+    Evaluation of lisp expressions consist of 6 scenarios:
     - a symbol interpreted as a variable name
     - a number that evaluates to itself
     - a conditional if statement
     - a new variable definition
+    - a quote operation
     - a procedure call
     :param x: parsed expression
     :param env: environment dictionary
     :return: evaluation result
     """
-    if env is None:
-        env = standard_env()
-
+    "Evaluate an expression in an environment."
     if isinstance(x, Symbol):
         return env[x]
     elif isinstance(x, Number):
@@ -145,6 +145,6 @@ def scheme_str(exp):
     :return: scheme-readable string
     """
     if isinstance(exp, List):
-        return '(' + ' '.join(map(schemestr, exp)) + ')'
+        return '(' + ' '.join(map(scheme_str, exp)) + ')'
     else:
         return str(exp)
