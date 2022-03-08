@@ -120,10 +120,21 @@ def repl(prompt='>> '):
     REPL - a read-eval-print loop
     :param prompt: prompt strin
     """
+
     while True:
-        val = lisp_eval(parse(input(prompt)))
-        if val is not None:
-            print(scheme_str(val))
+        try:
+            val = lisp_eval(parse(input(prompt)))
+            if val is not None:
+                print(scheme_str(val))
+        except SyntaxError as e:
+            print(f"Syntax error: {e}")
+        except ZeroDivisionError:
+            print("Zero Division Error")
+        except KeyError as e:
+            print(f"Lisp syntax error: {e}")
+        except KeyboardInterrupt:
+            print("Keyboard Interrupt")
+            break
 
 
 def scheme_str(exp):
