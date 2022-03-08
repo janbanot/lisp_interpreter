@@ -13,6 +13,6 @@
 - eq - tests equality of two elements
 - quote - returns back given symbol
 
-Selection of the function was based on John McCarhty and Paul Graham publications
+Selection of the function was based on John McCarthy and Paul Graham publicationson Lisp language
 
 ### REPL interpreter can be run from main.py file
