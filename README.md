@@ -1,6 +1,6 @@
 # Lisp interpreter written in Python
 
-## In general there are 2 main requirements for an language to be Turing-Complete:
+## In general there are 2 main requirements for a language to be Turing-Complete:
 - a form of conditional repetition or conditional branching
 - a way to read and write some form of storage (e.g. variables, lists)
 
@@ -13,6 +13,6 @@
 - eq - tests equality of two elements
 - quote - returns back given symbol
 
-Selection of the function was based on John McCarthy and Paul Graham publicationson Lisp language
+Selection of the function was based on John McCarthy and Paul Graham publications Lisp language
 
 ### REPL interpreter can be run from main.py file
