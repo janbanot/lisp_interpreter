@@ -98,7 +98,6 @@ def lisp_eval(x: Exp, env=global_env) -> Exp:
     :param env: environment dictionary
     :return: evaluation result
     """
-    "Evaluate an expression in an environment."
     if isinstance(x, Symbol):
         return env[x]
     elif isinstance(x, Number):
