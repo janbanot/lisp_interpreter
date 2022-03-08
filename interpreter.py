@@ -20,7 +20,7 @@ def tokenize(chars: str) -> list:
 
 def read_from_tokens(tokens: list) -> Exp:
     """
-    Assembles nested list of prefix expressions from tokenized program intput string.
+    Assembles nested list of prefix expressions from tokenized program intput string
     :param tokens: list of tokens
     :return: nested list of expressions or a symbol
     """
@@ -83,10 +83,8 @@ def standard_env() -> Env:
     })
     return env
 
-global_env = standard_env()
 
-
-def lisp_eval(x: Exp, env=global_env) -> Exp:
+def lisp_eval(x: Exp, env=None) -> Exp:
     """
     Evaluation of lisp expressions consist of 5 scenarios:
     - a symbol interpreted as a variable name
@@ -98,6 +96,9 @@ def lisp_eval(x: Exp, env=global_env) -> Exp:
     :param env: environment dictionary
     :return: evaluation result
     """
+    if env is None:
+        env = standard_env()
+
     if isinstance(x, Symbol):
         return env[x]
     elif isinstance(x, Number):
@@ -120,7 +121,7 @@ def repl(prompt='>> '):
     REPL - a read-eval-print loop
     :param prompt: prompt strin
     """
-
+    print("Lisp interpreter")
     while True:
         try:
             val = lisp_eval(parse(input(prompt)))
