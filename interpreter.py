@@ -1,12 +1,12 @@
 import operator as op
 
 # Lisp type definitions
-Symbol = str
-Number = (int, float)
-Atom = (Symbol, Number)
-List = list
-Exp = (Atom, List)
-Env = dict
+Symbol = str             # A Lisp Symbol is implemented as a Python str
+Number = (int, float)    # A Lisp Number is implemented as a Python int or float
+Atom = (Symbol, Number)  # A Lips Atom is a Symbol or Number
+List = list              # A Lisp List is implemeted as a Python list
+Exp = (Atom, List)       # A Scheme expression is an Atom or List
+Env = dict               # An Environment dictionary
 
 
 def tokenize(chars: str) -> list:
@@ -74,6 +74,10 @@ def standard_env() -> Env:
         '-': op.sub,
         '*': op.mul,
         '/': op.truediv,
+        '>': op.gt,
+        '<': op.lt,
+        '>=': op.ge,
+        '<=': op.le,
         'eq': op.eq,
         'cons': lambda x, y: [x, y],
         'car': lambda x: x[0],
@@ -103,6 +107,9 @@ def lisp_eval(x: Exp, env=global_env) -> Exp:
         return env[x]
     elif isinstance(x, Number):
         return x
+    elif x[0] == 'quote':
+        (_, result) = x
+        return result
     elif x[0] == 'if':
         (_, condition, consequent, alternative) = x
         exp = (consequent if lisp_eval(condition, env) else alternative)
@@ -126,7 +133,7 @@ def repl(prompt='>> '):
         try:
             val = lisp_eval(parse(input(prompt)))
             if val is not None:
-                print(scheme_str(val))
+                print(lisp_str(val))
         except SyntaxError as e:
             print(f"Syntax error: {e}")
         except ZeroDivisionError:
@@ -138,13 +145,13 @@ def repl(prompt='>> '):
             break
 
 
-def scheme_str(exp):
+def lisp_str(exp):
     """
     Converts a Python object back into scheme-readable string
     :param exp: nested expression
     :return: scheme-readable string
     """
     if isinstance(exp, List):
-        return '(' + ' '.join(map(scheme_str, exp)) + ')'
+        return '(' + ' '.join(map(lisp_str, exp)) + ')'
     else:
         return str(exp)
