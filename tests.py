@@ -34,5 +34,13 @@ class EvalTests(unittest.TestCase):
         self.assertEqual(3, lisp_eval(parse(test_procedure_car)))
         self.assertEqual(4, lisp_eval(parse(test_procedure_cdr)))
 
+    def test_conditions_1(self):
+        test_procedure = "(if (< 2 4) 1 2)"
+        self.assertEqual(1, lisp_eval(parse(test_procedure)))
+
+    def test_conditions_2(self):
+        test_procedure = "(if (> 2 4) 1 2)"
+        self.assertEqual(2, lisp_eval(parse(test_procedure)))
+
 if __name__ == '__main__':
     unittest.main()
