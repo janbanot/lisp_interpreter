@@ -1,6 +1,6 @@
 import operator as op
 
-# Lisp type definitons
+# Lisp type definitions
 Symbol = str
 Number = (int, float)
 Atom = (Symbol, Number)
@@ -20,7 +20,7 @@ def tokenize(chars: str) -> list:
 
 def read_from_tokens(tokens: list) -> Exp:
     """
-    Assembles nested list of prefix expressions from tokenized program intput string
+    Assembles nested list of prefix expressions from tokenized program input string
     :param tokens: list of tokens
     :return: nested list of expressions or a symbol
     """
@@ -65,7 +65,7 @@ def parse(input_program: str) -> Exp:
 
 def standard_env() -> Env:
     """
-    An environment maps includes neccessary lisp standard function to their python implementation
+    An environment maps includes necessary lisp standard function to their python implementation
     :return: dictionary with mapping from lisp primitives to python implementation
     """
     env = Env()
@@ -81,6 +81,7 @@ def standard_env() -> Env:
         'atom': lambda x: isinstance(x, Atom)
     })
     return env
+
 
 global_env = standard_env()
 
@@ -118,7 +119,7 @@ def lisp_eval(x: Exp, env=global_env) -> Exp:
 def repl(prompt='>> '):
     """
     REPL - a read-eval-print loop
-    :param prompt: prompt strin
+    :param prompt: prompt string
     """
     print("Lisp interpreter")
     while True:
